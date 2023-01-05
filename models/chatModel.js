@@ -1,4 +1,4 @@
-const mongoose = reqiure('mongoose');
+const mongoose = require('mongoose');
 
 const chartModel = mongoose.Schema(
   {

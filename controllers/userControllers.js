@@ -59,7 +59,9 @@ const searchUser = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const users = await User.find(keyword).find({ _id: { $ne: req.user.id } });
+  const users = await await User.find(keyword)
+    .select('-password')
+    .find({ _id: { $ne: req.user.id } });
 
   res.status(200).send({ message: 'User(s) Found', users });
 });
