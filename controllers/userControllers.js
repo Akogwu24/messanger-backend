@@ -4,10 +4,10 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, pic } = req.body;
+  const { name, email, password, phoneNumber, pic } = req.body;
 
   try {
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phoneNumber) {
       res.status(400);
       throw new Error('Please Enter all the Fileds');
     }
@@ -16,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if (userExists) return res.status(409).send({ message: 'User Already Exists' });
 
-    const newUser = await User.create({ name, email, password, pic });
+    const newUser = await User.create({ name, email, password, pic, phoneNumber });
 
     if (newUser) {
       //   res.status(201).json({ success: `new user ${newUser.name} created Successfully`, ...newUser._doc, token: generateToken(newUser._id, email) });
@@ -42,7 +42,14 @@ const loginUser = asyncHandler(async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (user && passwordMatch) {
-      res.json({ _id: user._id, name: user.name, email: user.email, pic: user.pic, token: generateToken(user._id, user.email) });
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        pic: user.pic,
+        phoneNumber: user.phoneNumber,
+        token: generateToken(user._id, user.email, user.phoneNumber),
+      });
     } else {
       res.status(400).json({ message: 'Invalid Creidentials' });
     }
@@ -58,7 +65,7 @@ const searchUser = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const users = await await User.find(keyword)
+  const users = await User.find(keyword)
     .select('-password')
     .find({ _id: { $ne: req.user.id } });
 

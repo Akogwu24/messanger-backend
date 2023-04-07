@@ -67,8 +67,6 @@ const createGroupChat = asyncHandler(async (req, res) => {
 
   if (duplicateGroup) return res.status(409).send({ message: 'Group Already Exist' });
 
-  console.log({ duplicateGroup });
-
   let users = JSON.parse(usersList);
   if (users.lenght < 2) return res.status(400).send({ message: 'More Than 2 Users are required to form a Group Chat' });
 
