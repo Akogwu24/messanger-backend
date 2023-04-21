@@ -28,4 +28,4 @@ const chartModel = mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('chat', chartModel);
+module.exports = mongoose.model('Chat', chartModel);
